@@ -1,10 +1,13 @@
 package database
 
 import (
-	"enconder/domain"
+	"encoder/domain"
 	"log"
 
 	"github.com/jinzhu/gorm"
+
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/lib/pq"
 )
 
 type Database struct {
@@ -61,6 +64,7 @@ func (d *Database) Connect() (*gorm.DB, error) {
 			&domain.Video{},
 			&domain.Job{},
 		)
+		d.Db.Model(domain.Job{}).AddForeignKey("video_id", "videos(id)", "CASCADE", "CASCADE")
 	}
 
 	return d.Db, nil
